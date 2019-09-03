@@ -1,13 +1,13 @@
 package com.rissandimo.petclinic.services.map;
 
 import com.rissandimo.petclinic.model.Vet;
-import com.rissandimo.petclinic.services.CrudService;
+import com.rissandimo.petclinic.services.VetService;
 
 import java.util.Set;
 
-public class VetMapService
+public class VetServiceMap
         extends AbstractMapService<Vet, Long>
-        implements CrudService<Vet, Long>
+        implements VetService
 {
     @Override
     public Set<Vet> findAll()
