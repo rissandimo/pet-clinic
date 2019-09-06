@@ -21,14 +21,19 @@ abstract class AbstractMapService<T extends BaseEntity, ID extends Long>
     T save(T object)
     {
         //check of object exists
-        if(object == null) throw new RuntimeException("Object cannot be null");
-
-        //set id
-        if(object.getId() == null)
+        if(object != null)
         {
-            object.setId(getNextId());
+            if(object.getId() == null)
+            {
+                object.setId(getNextId());   //set id
+            }
+            map.put(object.getId(), object);
         }
-        return map.put(object.getId(), object);
+        else
+        {
+            throw new RuntimeException("Object cannot be null");
+        }
+        return object;
     }
 
     void deleteById(ID id)
