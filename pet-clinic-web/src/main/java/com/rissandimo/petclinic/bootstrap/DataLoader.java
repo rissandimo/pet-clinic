@@ -1,11 +1,9 @@
 package com.rissandimo.petclinic.bootstrap;
 
-import com.rissandimo.petclinic.model.Owner;
-import com.rissandimo.petclinic.model.Pet;
-import com.rissandimo.petclinic.model.PetType;
-import com.rissandimo.petclinic.model.Vet;
+import com.rissandimo.petclinic.model.*;
 import com.rissandimo.petclinic.services.OwnerService;
 import com.rissandimo.petclinic.services.PetTypeService;
+import com.rissandimo.petclinic.services.SpecialtiesService;
 import com.rissandimo.petclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -18,12 +16,15 @@ public class DataLoader implements CommandLineRunner
     private final OwnerService ownerService;
     private final VetService vetService;
     private final PetTypeService petTypeService;
+    private final SpecialtiesService specialtiesService;
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService)
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService,
+                      SpecialtiesService specialtiesService)
     {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
+        this.specialtiesService = specialtiesService;
     }
 
     /**
@@ -35,16 +36,39 @@ public class DataLoader implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception
     {
+        int numOfPets = petTypeService.findAll().size();
 
-        //create dog pet type
+        if(numOfPets == 0)
+        {
+            loadData();
+        }
+    }
+
+    private void loadData()
+    {
+        //Create dog pet type
         PetType petTypeDog = new PetType();
         petTypeDog.setName("Dog");
         PetType savedPetDogType = petTypeService.save(petTypeDog);
 
-        //create cat pet type
+        //Create cat pet type
         PetType petTypeCat = new PetType();
         petTypeDog.setName("Cat");
         PetType savedPetCatType = petTypeService.save(petTypeCat);
+
+        //Create Specialties
+        Specialty radiology = new Specialty();
+        radiology.setDescription("Radiology");
+        Specialty savedRadiology = specialtiesService.save(radiology);
+
+        Specialty surgery = new Specialty();
+        surgery.setDescription("Surgery");
+        Specialty savedSurgery = specialtiesService.save(surgery);
+
+
+        Specialty dentistry = new Specialty();
+        dentistry.setDescription("Dentistry");
+        Specialty savedDentistry = specialtiesService.save(dentistry);
 
 
         //Create owner - michael
@@ -64,7 +88,7 @@ public class DataLoader implements CommandLineRunner
         owner1Michael.getPets().add(mikesPet);
         ownerService.save(owner1Michael);
 
-/*        //Create owner - Fionna
+        //Create owner - Fionna
         Owner owner2Fionna = new Owner();
         owner2Fionna.setFirstName("Fionna");
         owner2Fionna.setLastName("Glenneane");
@@ -79,21 +103,25 @@ public class DataLoader implements CommandLineRunner
         fionnasPet.setBirthDate(LocalDate.now());
         fionnasPet.setName("Giner");
         owner2Fionna.getPets().add(fionnasPet);
-        ownerService.save(owner2Fionna);*/
+        ownerService.save(owner2Fionna);
 
         System.out.println("Loaded owners...");
 
-        Vet vet1 = new Vet();
-        vet1.setFirstName("Sam");
-        vet1.setLastName("Axe");
+        //Create vet 1
+        Vet vet1Sam = new Vet();
+        vet1Sam.setFirstName("Sam");
+        vet1Sam.setLastName("Axe");
+        vet1Sam.getSpecialties().add(savedRadiology);
 
-        vetService.save(vet1);
+        vetService.save(vet1Sam);
 
-        Vet vet2 = new Vet();
-        vet2.setFirstName("Jessie");
-        vet2.setLastName("Porter");
+        //Create vet 2
+        Vet vet2Jessie = new Vet();
+        vet2Jessie.setFirstName("Jessie");
+        vet2Jessie.setLastName("Porter");
+        vet2Jessie.getSpecialties().add(savedSurgery);
 
-        vetService.save(vet2);
+        vetService.save(vet2Jessie);
 
         System.out.println("Loaded vets....");
     }
