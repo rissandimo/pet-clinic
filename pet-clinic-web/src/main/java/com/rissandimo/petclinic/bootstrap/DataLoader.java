@@ -1,15 +1,15 @@
 package com.rissandimo.petclinic.bootstrap;
 
 import com.rissandimo.petclinic.model.*;
-import com.rissandimo.petclinic.services.OwnerService;
-import com.rissandimo.petclinic.services.PetTypeService;
-import com.rissandimo.petclinic.services.SpecialtiesService;
-import com.rissandimo.petclinic.services.VetService;
+import com.rissandimo.petclinic.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+/**
+ * The services will get injected based on the active profile
+ */
 @Component
 public class DataLoader implements CommandLineRunner
 {
@@ -17,14 +17,16 @@ public class DataLoader implements CommandLineRunner
     private final VetService vetService;
     private final PetTypeService petTypeService;
     private final SpecialtiesService specialtiesService;
+    private final VisitService visitService;
 
     public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService,
-                      SpecialtiesService specialtiesService)
+                      SpecialtiesService specialtiesService, VisitService visitService)
     {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialtiesService = specialtiesService;
+        this.visitService = visitService;
     }
 
     /**
@@ -104,6 +106,12 @@ public class DataLoader implements CommandLineRunner
         fionnasPet.setName("Giner");
         owner2Fionna.getPets().add(fionnasPet);
         ownerService.save(owner2Fionna);
+
+        Visit fionnaVisit = new Visit();
+        fionnaVisit.setDate(LocalDate.now());
+        fionnaVisit.setPet(fionnasPet);
+        fionnaVisit.setDescription("Her cat was sneezing");
+        visitService.save(fionnaVisit);
 
         System.out.println("Loaded owners...");
 
