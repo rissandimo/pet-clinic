@@ -1,6 +1,7 @@
 package com.rissandimo.petclinic.services.springdatajpa;
 
 import com.rissandimo.petclinic.model.Pet;
+import com.rissandimo.petclinic.repositories.PetRepository;
 import com.rissandimo.petclinic.services.PetService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -10,44 +11,44 @@ import java.util.Set;
 
 @Profile("springdatajpa")
 @Service
-public class PetSpringDataJpa implements PetService
+public class PetSpringDataJpaService implements PetService
 {
-    private final PetService petService;
+    private final PetRepository petRepository;
 
-    public PetSpringDataJpa(PetService petService)
+    public PetSpringDataJpaService(PetRepository petRepository)
     {
-        this.petService = petService;
+        this.petRepository = petRepository;
     }
 
     @Override
     public Set<Pet> findAll()
     {
         Set<Pet> pets = new HashSet<>();
-        petService.findAll().forEach(pets::add);
+        petRepository.findAll().forEach(pets::add);
         return pets;
     }
 
     @Override
     public Pet findById(Long id)
     {
-        return petService.findById(id);
+        return petRepository.findById(id).orElse(null);
     }
 
     @Override
     public Pet save(Pet pet)
     {
-        return petService.save(pet);
+        return petRepository.save(pet);
     }
 
     @Override
     public void delete(Pet pet)
     {
-        petService.delete(pet);
+        petRepository.delete(pet);
     }
 
     @Override
     public void deleteById(Long id)
     {
-        petService.deleteById(id);
+        petRepository.deleteById(id);
     }
 }
