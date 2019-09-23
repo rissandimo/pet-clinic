@@ -2,14 +2,14 @@ package com.rissandimo.petclinic.services.map;
 
 import com.rissandimo.petclinic.model.Person;
 import com.rissandimo.petclinic.services.CrudService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+@Profile({"default", "map"})
 @Service
-public class PersonMapService
-        extends AbstractMapService<Person, Long>
-        implements CrudService<Person, Long>
+public class PersonMapService extends AbstractMapService<Person, Long> implements CrudService<Person, Long>
 {
 
     @Override
